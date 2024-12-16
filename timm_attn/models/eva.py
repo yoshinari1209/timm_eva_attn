@@ -43,7 +43,6 @@ from ._registry import generate_default_cfgs, register_model
 
 __all__ = ['Eva']
 
-
 class EvaAttention(nn.Module):
     fused_attn: torch.jit.Final[bool]
 
@@ -80,7 +79,8 @@ class EvaAttention(nn.Module):
         all_head_dim = head_dim * self.num_heads
         self.scale = head_dim ** -0.5
         self.num_prefix_tokens = num_prefix_tokens
-        self.fused_attn = use_fused_attn()
+        self.fused_attn = False
+        #use_fused_attn()
         self.qkv_bias_separate = qkv_bias_separate
 
         if qkv_fused:
