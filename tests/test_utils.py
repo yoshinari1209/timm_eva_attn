@@ -1,19 +1,19 @@
 from torch.nn.modules.batchnorm import BatchNorm2d
 from torchvision.ops.misc import FrozenBatchNorm2d
 
-import timm
+import timm_attn
 import pytest
-from timm.utils.model import freeze, unfreeze
-from timm.utils.model import ActivationStatsHook
-from timm.utils.model import extract_spp_stats
+from timm_attn.utils.model import freeze, unfreeze
+from timm_attn.utils.model import ActivationStatsHook
+from timm_attn.utils.model import extract_spp_stats
 
-from timm.utils.model import _freeze_unfreeze
-from timm.utils.model import avg_sq_ch_mean, avg_ch_var, avg_ch_var_residual
-from timm.utils.model import reparameterize_model
-from timm.utils.model import get_state_dict
+from timm_attn.utils.model import _freeze_unfreeze
+from timm_attn.utils.model import avg_sq_ch_mean, avg_ch_var, avg_ch_var_residual
+from timm_attn.utils.model import reparameterize_model
+from timm_attn.utils.model import get_state_dict
 
 def test_freeze_unfreeze():
-    model = timm.create_model('resnet18')
+    model = timm_attn.create_model('resnet18')
 
     # Freeze all
     freeze(model)
@@ -64,7 +64,7 @@ def test_freeze_unfreeze():
     assert isinstance(model.layer1[0].bn1, BatchNorm2d)
 
 def test_activation_stats_hook_validation():
-    model = timm.create_model('resnet18')
+    model = timm_attn.create_model('resnet18')
     
     def test_hook(model, input, output):
         return output.mean().item()
@@ -79,7 +79,7 @@ def test_activation_stats_hook_validation():
 
 
 def test_extract_spp_stats():
-    model = timm.create_model('resnet18')
+    model = timm_attn.create_model('resnet18')
     
     def test_hook(model, input, output):
         return output.mean().item()
@@ -98,7 +98,7 @@ def test_extract_spp_stats():
 
 def test_freeze_unfreeze_bn_root():
     import torch.nn as nn
-    from timm.layers import BatchNormAct2d
+    from timm_attn.layers import BatchNormAct2d
     
     # Create batch norm layers
     bn = nn.BatchNorm2d(10)
@@ -180,7 +180,7 @@ def test_get_state_dict_custom_unwrap():
 
 
 def test_freeze_unfreeze_string_input():
-    model = timm.create_model('resnet18')
+    model = timm_attn.create_model('resnet18')
     
     # Test with string input
     _freeze_unfreeze(model, 'layer1', mode='freeze')

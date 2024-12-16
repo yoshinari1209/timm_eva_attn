@@ -13,7 +13,7 @@ import os
 import hashlib
 import shutil
 import tempfile
-from timm.models import load_state_dict
+from timm_attn.models import load_state_dict
 try:
     import safetensors.torch
     _has_safetensors = True

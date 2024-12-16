@@ -9,8 +9,8 @@ Copyright 2020 Ross Wightman
 import argparse
 import numpy as np
 import onnxruntime
-from timm.data import create_loader, resolve_data_config, create_dataset
-from timm.utils import AverageMeter
+from timm_attn.data import create_loader, resolve_data_config, create_dataset
+from timm_attn.utils import AverageMeter
 import time
 
 parser = argparse.ArgumentParser(description='ONNX Validation')

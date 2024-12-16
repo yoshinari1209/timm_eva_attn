@@ -21,7 +21,7 @@ import time
 from typing import Callable, List, Tuple, Union
 
 
-from timm.models import is_model, list_models, get_pretrained_cfg, get_arch_pretrained_cfgs
+from timm_attn.models import is_model, list_models, get_pretrained_cfg, get_arch_pretrained_cfgs
 
 
 parser = argparse.ArgumentParser(description='Per-model process launcher')

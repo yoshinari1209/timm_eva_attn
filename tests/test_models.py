@@ -25,10 +25,10 @@ try:
 except ImportError:
     has_fx_feature_extraction = False
 
-import timm
-from timm import list_models, list_pretrained, create_model, set_scriptable, get_pretrained_cfg_value
-from timm.layers import Format, get_spatial_dim, get_channel_dim
-from timm.models import get_notrace_modules, get_notrace_functions
+import timm_attn
+from timm_attn import list_models, list_pretrained, create_model, set_scriptable, get_pretrained_cfg_value
+from timm_attn.layers import Format, get_spatial_dim, get_channel_dim
+from timm_attn.models import get_notrace_modules, get_notrace_functions
 
 import importlib
 import os
@@ -132,7 +132,7 @@ def test_model_inference(model_name, batch_size):
 
     model = create_model(model_name, pretrained=True)
     model.eval()
-    pp = timm.data.create_transform(**timm.data.resolve_data_config(model=model))
+    pp = timm_attn.data.create_transform(**timm_attn.data.resolve_data_config(model=model))
 
     with tempfile.TemporaryDirectory()  as temp_dir:
         snapshot_download(
@@ -216,14 +216,14 @@ def test_model_backward(model_name, batch_size):
 
 # models with extra conv/linear layers after pooling
 EARLY_POOL_MODELS = (
-    timm.models.EfficientVit,
-    timm.models.EfficientVitLarge,
-    timm.models.HighPerfGpuNet,
-    timm.models.GhostNet,
-    timm.models.MetaNeXt, # InceptionNeXt
-    timm.models.MobileNetV3,
-    timm.models.RepGhostNet,
-    timm.models.VGG,
+    timm_attn.models.EfficientVit,
+    timm_attn.models.EfficientVitLarge,
+    timm_attn.models.HighPerfGpuNet,
+    timm_attn.models.GhostNet,
+    timm_attn.models.MetaNeXt, # InceptionNeXt
+    timm_attn.models.MobileNetV3,
+    timm_attn.models.RepGhostNet,
+    timm_attn.models.VGG,
 )
 
 @pytest.mark.cfg
@@ -493,7 +493,7 @@ def test_model_forward_intermediates(model_name, batch_size):
     """Run a single forward pass with each model in feature extraction mode"""
     model = create_model(model_name, pretrained=False)
     model.eval()
-    feature_info = timm.models.FeatureInfo(model.feature_info, len(model.feature_info))
+    feature_info = timm_attn.models.FeatureInfo(model.feature_info, len(model.feature_info))
     expected_channels = feature_info.channels()
     expected_reduction = feature_info.reduction()
     assert len(expected_channels) >= 3  # all models here should have at least 3 feature levels

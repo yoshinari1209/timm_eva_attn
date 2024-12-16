@@ -22,10 +22,10 @@ import torch
 import torch.nn as nn
 import torch.nn.parallel
 
-from timm.data import create_dataset, create_loader, resolve_data_config, RealLabelsImagenet
-from timm.layers import apply_test_time_pool, set_fast_norm
-from timm.models import create_model, load_checkpoint, is_model, list_models
-from timm.utils import accuracy, AverageMeter, natural_key, setup_default_logging, set_jit_fuser, \
+from timm_attn.data import create_dataset, create_loader, resolve_data_config, RealLabelsImagenet
+from timm_attn.layers import apply_test_time_pool, set_fast_norm
+from timm_attn.models import create_model, load_checkpoint, is_model, list_models
+from timm_attn.utils import accuracy, AverageMeter, natural_key, setup_default_logging, set_jit_fuser, \
     decay_batch_step, check_batch_size_retry, ParseKwargs, reparameterize_model
 
 try:

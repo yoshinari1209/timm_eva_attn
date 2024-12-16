@@ -13,9 +13,9 @@ import torch
 from torch.nn import Parameter
 from torch.testing._internal.common_utils import TestCase
 
-from timm.optim import create_optimizer_v2, list_optimizers, get_optimizer_class, get_optimizer_info, OptimInfo
-from timm.optim import param_groups_layer_decay, param_groups_weight_decay
-from timm.scheduler import PlateauLRScheduler
+from timm_attn.optim import create_optimizer_v2, list_optimizers, get_optimizer_class, get_optimizer_info, OptimInfo
+from timm_attn.optim import param_groups_layer_decay, param_groups_weight_decay
+from timm_attn.scheduler import PlateauLRScheduler
 
 torch_backend = os.environ.get('TORCH_BACKEND')
 if torch_backend is not None:

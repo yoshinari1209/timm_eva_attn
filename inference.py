@@ -17,10 +17,10 @@ import numpy as np
 import pandas as pd
 import torch
 
-from timm.data import create_dataset, create_loader, resolve_data_config, ImageNetInfo, infer_imagenet_subset
-from timm.layers import apply_test_time_pool
-from timm.models import create_model
-from timm.utils import AverageMeter, setup_default_logging, set_jit_fuser, ParseKwargs
+from timm_attn.data import create_dataset, create_loader, resolve_data_config, ImageNetInfo, infer_imagenet_subset
+from timm_attn.layers import apply_test_time_pool
+from timm_attn.models import create_model
+from timm_attn.utils import AverageMeter, setup_default_logging, set_jit_fuser, ParseKwargs
 
 try:
     from apex import amp

@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from timm.layers import create_act_layer, set_layer_config, get_act_layer, get_act_fn
+from timm_attn.layers import create_act_layer, set_layer_config, get_act_layer, get_act_fn
 
 import importlib
 import os

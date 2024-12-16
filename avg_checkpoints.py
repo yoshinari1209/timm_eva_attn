@@ -16,7 +16,7 @@ import argparse
 import os
 import glob
 import hashlib
-from timm.models import load_state_dict
+from timm_attn.models import load_state_dict
 try:
     import safetensors.torch
     _has_safetensors = True

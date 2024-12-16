@@ -20,9 +20,9 @@ Copyright 2020 Ross Wightman
 """
 import argparse
 
-import timm
-from timm.utils.model import reparameterize_model
-from timm.utils.onnx import onnx_export
+import timm_attn
+from timm_attn.utils.model import reparameterize_model
+from timm_attn.utils.onnx import onnx_export
 
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Validation')
 parser.add_argument('output', metavar='ONNX_FILE',
@@ -70,7 +70,7 @@ def main():
     print("==> Creating PyTorch {} model".format(args.model))
     # NOTE exportable=True flag disables autofn/jit scripted activations and uses Conv2dSameExport layers
     # for models using SAME padding
-    model = timm.create_model(
+    model = timm_attn.create_model(
         args.model,
         num_classes=args.num_classes,
         in_chans=3,
