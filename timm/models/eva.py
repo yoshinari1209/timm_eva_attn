@@ -135,28 +135,30 @@ class EvaAttention(nn.Module):
             k = torch.cat([k[:, :, :npt, :], apply_rot_embed_cat(k[:, :, npt:, :], rope)], dim=2).type_as(v)
 
         if self.fused_attn:
-            x = F.scaled_dot_product_attention(
-                q, k, v,
-                attn_mask=attn_mask,
-                dropout_p=self.attn_drop.p if self.training else 0.,
-            )
+            # Fused attentionのアテンションマップを取得する方法は標準APIではサポートされていない可能性があるため、
+            # この場合は非fusedの分岐を用いて計算する。
+            raise NotImplementedError("Fused attention does not support extracting attention maps directly.")
         else:
             q = q * self.scale
-            attn = (q @ k.transpose(-2, -1))
+            attn = (q @ k.transpose(-2, -1))  # アテンションスコア計算: QK^T
             
             if attn_mask is not None:
                 attn_mask = attn_mask.to(torch.bool)
                 attn = attn.masked_fill(~attn_mask[:, None, None, :], float("-inf"))
-            attn = attn.softmax(dim=-1)
             
+            attn = attn.softmax(dim=-1)  # ソフトマックス適用
+            attn_map = attn  # アテンションマップを保存
+
             attn = self.attn_drop(attn)
-            x = attn @ v
+            x = attn @ v  # アテンションをVに適用
 
         x = x.transpose(1, 2).reshape(B, N, C)
         x = self.norm(x)
         x = self.proj(x)
         x = self.proj_drop(x)
-        return x
+
+        return x, attn_map  # アテンションマップを追加で出力
+
 
 
 class EvaBlock(nn.Module):
@@ -249,10 +251,10 @@ class EvaBlock(nn.Module):
 
     def forward(self, x, rope: Optional[torch.Tensor] = None, attn_mask: Optional[torch.Tensor] = None):
         if self.gamma_1 is None:
-            x = x + self.drop_path1(self.attn(self.norm1(x), rope=rope, attn_mask=attn_mask))
+            x = x + self.drop_path1(self.attn(self.norm1(x), rope=rope, attn_mask=attn_mask)[0])
             x = x + self.drop_path2(self.mlp(self.norm2(x)))
         else:
-            x = x + self.drop_path1(self.gamma_1 * self.attn(self.norm1(x), rope=rope, attn_mask=attn_mask))
+            x = x + self.drop_path1(self.gamma_1 * self.attn(self.norm1(x), rope=rope, attn_mask=attn_mask)[0])
             x = x + self.drop_path2(self.gamma_2 * self.mlp(self.norm2(x)))
         return x
 
@@ -344,7 +346,7 @@ class EvaBlockPostNorm(nn.Module):
         self.drop_path2 = DropPath(drop_path) if drop_path > 0. else nn.Identity()
 
     def forward(self, x, rope: Optional[torch.Tensor] = None, attn_mask: Optional[torch.Tensor] = None):
-        x = x + self.drop_path1(self.norm1(self.attn(x, rope=rope, attn_mask=attn_mask)))
+        x = x + self.drop_path1(self.norm1(self.attn(x, rope=rope, attn_mask=attn_mask)[0]))
         x = x + self.drop_path2(self.norm2(self.mlp(x)))
         return x
 
